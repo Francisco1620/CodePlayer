@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Code Player</title>
+	<meta charset="utf-8" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="../Scripts/jquery-2.1.4.min.js"></script>
+    <style>
+        body{
+            background-color:#1f9da1;
+            padding:0;
+            margin:0;
+        }
+        #wrapper{
+            width:100%;
+            height:100%;
+        }
+        header{
+            width:100%;
+            height:60px;
+            background-color:white;
+            border-bottom: 2px solid black;
+        }
+        #logo{
+            float:left;
+            margin:-10px 0 0 10px;
+        }
+        #btnRun{
+            float:right;
+            margin:10px 10px 0 0;
+        }
+        #runButton{
+            font-size:25px;
+            width:90px;
+            border-radius:10px;
+        }
+        #toggles{
+            list-style:none;
+            width:302.8px;
+            height:40px;
+            margin: 0 auto;
+            border:2px solid black;
+            border-radius:5px;
+            position:relative;
+            padding:0;
+            top:8px;
+        }
+        .selected{
+            background-color:#1f9da1;
+        }
+        #toggles li{
+            float:left;
+            font-size:30px;
+            border-right:1px solid black;
+            padding:4px 7px;
+            
+        }
+        #toggles li:hover{
+            background-color:#1f9da1;
+        }
+        .clear{
+            clear:both;
+        }
+        .codeBox{
+            float:left;
+            width:50%;
+            position:relative;
+            top:-8px;
+            background-color:#a7a5a5;
+        }
+        .codeBox > textarea{
+            width:100%;
+            height:100%;
+            border:none;
+            border-right:2px solid black;
+            font-size:20px;
+            padding:20px 0 0 10px;
+            background-color:#a7a5a5;
+            color:white;
+            font-family:Arial;
+            box-sizing:border-box;
+            z-index:1;
+        }
+        .title{
+            position:absolute;
+            padding:20px;
+            font-weight:bold;
+            font-size:20px;
+            color:white;
+            right:10px;
+        }
+        #CSSCode , #JSCode, #HTMLCode,#ResultCode{
+            display:none;
+        }
+        iframe{
+            width:100%;
+            height:100%;
+            border:none;
+            color:white;
+        }
+        #tryMe{
+            position:relative;
+            color:white;
+            width:80px;
+            height:auto;
+            top:50%;
+            left:50%;
+            margin-top:50px;
+            animation: floating ease 2s infinite;
+        }
+        #tryMe span{
+            font-size:50px;
+        }
+        #tryMe h1{
+            text-align:left;
+            margin-left:-30px;
+        }
+        @keyframes floating{
+            50%{margin-top:0;}
+            100%{margin-top:50px;}
+        }
+        #explanation{
+            position:absolute;
+            width:500px;
+            height:auto;
+            background-color:darkred;
+            padding:10px 30px;
+            font-size:20px;
+            color:white;
+            font-family:Arial;
+            top:50%;
+            left:50%;
+            margin-left:-270px;
+            margin-top:-150px;
+            z-index:-1;
+        }
+        
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <header>
+        <div id="logo">
+            <h1>CodePlayer</h1>
+        </div>
+        <div id="btnRun">
+            <button id="runButton">Run</button>
+        </div>
+        <ul id="toggles">
+            <li class="toggle">HTML</li>
+            <li class="toggle">CSS</li>
+            <li class="toggle">JS</li>
+            <li class="toggle" style="border:none;">Result</li>
+        </ul>
+    </header>
+    <div class="clear"></div>
+    <div id="HTMLCode" class="codeBox">
+        <div class="title">
+           HTML
+        </div>
+        <textarea id="htmlArea">Enter Code Here..</textarea>
+    </div>
+    <div id="CSSCode" class="codeBox">
+        <div class="title">
+            CSS
+        </div>
+        <textarea id="cssArea">Enter Code Here..</textarea>
+    </div>
+    <div id="JSCode" class="codeBox">
+        <div class="title">
+            JS
+        </div>
+        <textarea id="jsArea">Enter Code Here..</textarea>
+    </div>
+    <div id="ResultCode" class="codeBox">
+        <div class="title">
+            RESULTS
+        </div>
+        <iframe id="resultFrame"></iframe>
+    </div>
+    <div id="explanation">
+        <h3 style="text-align:center;">Explanation</h3>
+        <p>
+            This is a code player, Where you can try your own code
+            and see how things work.
+        </p>
+        <p>
+            You can use HTML and CSS only!
+        </p>
+        <p>
+            <a style="color:white;" href="https://en.wikipedia.org/wiki/HTML" target="_blank">HTML :</a> HyperText markup language
+        </p>
+        <p>
+            <a style="color:white;" href="https://en.wikipedia.org/wiki/Cascading_Style_Sheets" target="_blank">CSS :</a> Cascading Style Sheets
+        </p>
+        <p>
+            <a style="color:white;" href="https://en.wikipedia.org/wiki/JavaScript" target="_blank">JS :</a>
+            <strong style="color:yellow;">Javascript has been disable for security purpose</strong>
+            (Yes, javascript is that Powerful!)
+        </p>
+    </div>
+    <div id="game">
+
+    </div>
+    <div id="tryMe">
+        <span class="fa fa-angle-double-up"></span>
+        <h1 style="font-size:30px;">Try me!</h1>
+    </div>
+</div>
+    <script>
+        var windowsHeight = $(window).height();
+        var headersHeight = $("header").height();
+        $(".codeBox").height(windowsHeight - headersHeight + "px");
+
+        $(".toggle").click(function () {
+            $(this).toggleClass("selected");
+            var activeDiv = $(this).html();
+            $("#" + activeDiv + "Code").toggle();
+            var showingDivs = $(".codeBox").filter(function () {
+                return ($(this).css("display") != "none");
+            }).length;
+
+            var width = 100 / showingDivs;
+            $(".codeBox").width(width + "%");
+
+        });
+        
+        $("#runButton").click(function () {
+            $("iframe").contents().find("html").html('<style>' + $("#cssArea").val() + '</style>' + $("#htmlArea").val());
+
+            document.getElementById("resultFrame").contentWindow.eval($("#jsArea").val());
+        });
+    </script>
+</body>
+</html>
